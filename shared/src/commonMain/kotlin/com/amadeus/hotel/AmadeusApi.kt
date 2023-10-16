@@ -24,8 +24,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 class AmadeusApi {
-    private var accessToken=""
-    private val tokenExpiresIn=0
+    private var accessToken = ""
+    private val tokenExpiresIn = 0
     private val client = HttpClient() {
         install(Logging) {
             logger = Logger.SIMPLE
@@ -61,22 +61,41 @@ class AmadeusApi {
         } catch (e: ClientRequestException) {
             println(e.message)
             ""
+        } catch (e: Exception) {
+            println(e.message)
+            ""
         }
     }
 
-    suspend fun searchHotelByCity(city: String, amenities: List<String>, rating: String) {
+    suspend fun searchHotelByCity(
+        city: String,
+        amenities: String,
+        rating: String
+    ): Pair<List<Hotel>, String> {
         try {
-            accessToken=getAccessToken()
+            accessToken = getAccessToken()
+            var url =
+                "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=$city&radius=50&radiusUnit=KM"
+            if (amenities.isNotEmpty()) {
+                url = "$url&amenities=$amenities"
+            }
+            if (rating.isNotEmpty()) {
+                url = "$url&ratings=$rating"
+            }
             val response: HotelSearchResponse =
-                client.get("https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=$city&radius=50&radiusUnit=KM&amenities=$amenities&ratings=$rating") {
+                client.get(url) {
                     headers {
                         bearerAuth(accessToken)
                     }
                 }.body()
-            print(response.data.size)
+            if (response.errors.isNotEmpty()) {
+                return Pair(emptyList(), response.errors.first().detail ?: "An error occurred")
+            }
+            return Pair(response.data, "")
         } catch (e: ClientRequestException) {
-            println(e.message)
+            return Pair(emptyList(), e.message ?: "An error occurred")
+        } catch (e: Exception) {
+            return Pair(emptyList(), e.message ?: "An error occurred")
         }
-        print("+++++++++++++++++++")
     }
 }

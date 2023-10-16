@@ -24,7 +24,7 @@ data class AmadeusOAuth2TokenResponse(
 )
 
 @Serializable
-data class Data(
+data class Hotel(
     @SerialName("chainCode") var chainCode: String? = null,
     @SerialName("iataCode") var iataCode: String? = null,
     @SerialName("dupeId") var dupeId: Int? = null,
@@ -52,7 +52,7 @@ data class GeoCode(
 
 @Serializable
 data class HotelSearchResponse(
-    @SerialName("data") var data: ArrayList<Data> = arrayListOf(),
+    @SerialName("data") var data: ArrayList<Hotel> = arrayListOf(),
     @SerialName("errors") var errors: ArrayList<Errors> = arrayListOf()
 )
 

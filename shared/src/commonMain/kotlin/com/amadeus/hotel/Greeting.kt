@@ -1,16 +1,38 @@
 package com.amadeus.hotel
 
-import kotlinx.coroutines.runBlocking
-
 class Greeting {
-    private val platform: Platform = getPlatform()
     private val amadeusApi:AmadeusApi= AmadeusApi()
+    private val cityCodes:Map<String,String> = mapOf(
+        ("New York" to "NYC"),
+        ("Rome" to "ROM"),
+        ("Chicago" to "CHI"),
+        ("Paris" to "PAR"),
+        ("Mayport" to "NRB"),
+        ("London" to "LON"),
+        ("Tokyo" to "TYO"),
+        ("Lagos" to "LOS"),
+        ("Delhi" to "DEL")
+    )
 
-     fun greet(): String {
-         runBlocking {
-             amadeusApi.getAccessToken()
-             amadeusApi.searchHotelByCity(city = "PAR", amenities = listOf("SWIMMING_POOL","SPA","RESTAURANT","WIFI","ROOM_SERVICE"), rating = "3")
-         }
-        return "Hello, ${platform.name}!"
+    private val hotelAmenities:List<String> = listOf(
+        "SWIMMING_POOL","SPA","FITNESS_CENTER","RESTAURANT","PARKING","WIFI","ROOM_SERVICE"
+    )
+
+    private val hotelRatings:List<Int> = listOf(1,2,3,4,5)
+
+    suspend fun searchHotel(city: String, amenities: List<String>, rating: List<Int>): Pair<List<Hotel>, String>  {
+        return amadeusApi.searchHotelByCity(city = cityCodes[city]!!, amenities = amenities.joinToString(separator = ","), rating = rating.joinToString(separator = ","))
+    }
+
+    fun getCityCodes():Map<String,String>{
+        return  cityCodes
+    }
+
+    fun getHotelAmenities():List<String>{
+        return  hotelAmenities
+    }
+
+    fun getHotelRatings():List<Int>{
+        return  hotelRatings
     }
 }
