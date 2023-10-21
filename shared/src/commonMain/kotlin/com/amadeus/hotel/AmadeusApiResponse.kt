@@ -36,7 +36,6 @@ data class Hotel(
     @SerialName("rating") var rating: Int? = null,
     @SerialName("giataId") var giataId: Int? = null,
     @SerialName("lastUpdate") var lastUpdate: String? = null
-
 )
 
 @Serializable
