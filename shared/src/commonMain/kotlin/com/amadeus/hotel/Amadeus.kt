@@ -1,6 +1,6 @@
 package com.amadeus.hotel
 
-class Greeting {
+class Amadeus {
     private val amadeusApi:AmadeusApi= AmadeusApi()
     private val cityCodes:Map<String,String> = mapOf(
         ("New York" to "NYC"),

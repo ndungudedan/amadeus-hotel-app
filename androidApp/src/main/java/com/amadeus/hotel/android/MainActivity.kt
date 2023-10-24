@@ -1,11 +1,7 @@
 package com.amadeus.hotel.android
-
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
@@ -26,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import com.amadeus.hotel.Greeting
+import com.amadeus.hotel.Amadeus
 import com.amadeus.hotel.Hotel
 import kotlinx.coroutines.launch
 
@@ -45,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    GreetingView()
+                    MainView()
                 }
             }
         }
@@ -54,7 +50,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GreetingView() {
+fun MainView() {
     val coroutineScope = rememberCoroutineScope()
     var expanded by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("No hotels found") }
@@ -66,7 +62,7 @@ fun GreetingView() {
     Scaffold(
         topBar = {
             TopAppBar(title = {
-                Text(text = "Hotel Search", color = Color.White)
+                Text(text = "Amadeus Hotel Search", color = Color.White)
             },
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary
@@ -87,7 +83,7 @@ fun GreetingView() {
                     coroutineScope.launch {
                         if (selectedCity.isNotEmpty()) {
                             errorMessage="Loading"
-                           val res = Greeting().searchHotel(
+                           val res = Amadeus().searchHotel(
                                 selectedCity,
                                 selectedHotelAmenitiesState.value.toList(),
                                 selectedHotelRatingState.value.toList()
@@ -107,7 +103,7 @@ fun GreetingView() {
                     coroutineScope.launch {
                         if (selectedCity.isNotEmpty()) {
                             errorMessage="Loading"
-                            val res = Greeting().searchHotel(
+                            val res = Amadeus().searchHotel(
                                 selectedCity,
                                 selectedHotelAmenitiesState.value.toList(),
                                 selectedHotelRatingState.value.toList()
@@ -142,7 +138,7 @@ fun GreetingView() {
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
-                        Greeting().getCityCodes().forEach {
+                        Amadeus().getCityCodes().forEach {
                             DropdownMenuItem(text = {
                                 Text(text = it.key)
                             }, onClick = {
@@ -150,7 +146,7 @@ fun GreetingView() {
                                 selectedCity = it.key
                                 coroutineScope.launch {
                                     errorMessage="Loading"
-                                    val res = Greeting().searchHotel(
+                                    val res = Amadeus().searchHotel(
                                         selectedCity,
                                         selectedHotelAmenitiesState.value.toList(),
                                         selectedHotelRatingState.value.toList()
@@ -186,9 +182,20 @@ fun GreetingView() {
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Column(Modifier.padding(8.dp)) {
-                                    Text(
-                                        text = "${it.name} \t ${it.address?.countryCode?:""} \t ${it.rating?:""}",
-                                    )
+                                        Text(
+                                            text = "${it.name}",
+                                        )
+                                    Row{
+                                        val itemIndices = it.rating?.let { it1 -> List(it1) { it } }
+                                        itemIndices?.forEach { _ ->
+                                            Icon(
+                                                Icons.Filled.Star,
+                                                "",
+                                                modifier = Modifier.size(size = 20.dp),
+                                                tint = Color.Yellow
+                                            )
+                                        }
+                                    }
                                     if(it.amenities.isNotEmpty()){Text(
                                         text = it.amenities.toString(),
                                     )}
@@ -207,7 +214,7 @@ fun GreetingView() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RatingChipGroup(
-    hotelRating: List<Int> = Greeting().getHotelRatings(),
+    hotelRating: List<Int> = Amadeus().getHotelRatings(),
     selectedHotelRating: MutableSet<Int> = mutableSetOf(),
     onSelectedChanged: (MutableSet<Int>) -> Unit = {}
 ) {
@@ -248,7 +255,7 @@ fun RatingChipGroup(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AmenitiesChipGroup(
-    hotelAmenities: List<String> = Greeting().getHotelAmenities(),
+    hotelAmenities: List<String> = Amadeus().getHotelAmenities(),
     selectedHotelAmenities: MutableSet<String> = mutableSetOf(),
     onSelectedChanged: (MutableSet<String>) -> Unit = {}
 ) {
@@ -290,6 +297,6 @@ fun AmenitiesChipGroup(
 @Composable
 fun DefaultPreview() {
     MyApplicationTheme {
-        GreetingView()
+        MainView()
     }
 }
