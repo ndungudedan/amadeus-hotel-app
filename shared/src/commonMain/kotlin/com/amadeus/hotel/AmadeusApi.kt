@@ -25,7 +25,6 @@ import kotlinx.serialization.json.Json
 
 class AmadeusApi {
     private var accessToken = ""
-    private val tokenExpiresIn = 0
     private val client = HttpClient() {
         install(Logging) {
             logger = Logger.SIMPLE
@@ -40,9 +39,8 @@ class AmadeusApi {
             )
         }
     }
-    //client.close()
 
-    suspend fun getAccessToken(): String {
+    private suspend fun getAccessToken(): String {
         val formData = Parameters.build {
             append("grant_type", "client_credentials")
             append("client_id", "vwNbG2xHs9fyc7eUJrWQa3dugsCLxgA7")
