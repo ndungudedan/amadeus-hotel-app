@@ -22,7 +22,6 @@ data class AmadeusOAuth2TokenResponse(
     val state: String,
     val scope: String
 )
-
 @Serializable
 data class Hotel(
     @SerialName("chainCode") var chainCode: String? = null,
@@ -35,7 +34,8 @@ data class Hotel(
     @SerialName("amenities") var amenities: ArrayList<String> = arrayListOf(),
     @SerialName("rating") var rating: Int? = null,
     @SerialName("giataId") var giataId: Int? = null,
-    @SerialName("lastUpdate") var lastUpdate: String? = null
+    @SerialName("lastUpdate") var lastUpdate: String? = null,
+    @SerialName("contact"   ) var contact   : Contact? = Contact()
 )
 
 @Serializable
@@ -61,5 +61,84 @@ data class Errors(
     @SerialName("detail") var detail: String? = null,
     @SerialName("status") var status: Int? = null,
     @SerialName("title") var title: String? = null
+)
+@Serializable
+data class HotelOffersResponse (
+    @SerialName("data" ) var data : ArrayList<OffersData> = arrayListOf()
+)
 
+@Serializable
+data class OffersData (
+    @SerialName("type"      ) var type      : String?           = null,
+    @SerialName("hotel"     ) var hotel     : Hotel?            = Hotel(),
+    @SerialName("available" ) var available : Boolean?          = null,
+    @SerialName("offers"    ) var offers    : ArrayList<Offers> = arrayListOf(),
+    @SerialName("self"      ) var self      : String?           = null
+)
+@Serializable
+data class Contact (
+    @SerialName("phone" ) var phone : String? = null
+)
+@Serializable
+data class TypeEstimated (
+    @SerialName("category" ) var category : String? = null,
+    @SerialName("beds"     ) var beds     : Int?    = null,
+    @SerialName("bedType"  ) var bedType  : String? = null
+)
+@Serializable
+data class Description (
+    @SerialName("text" ) var text : String? = null,
+    @SerialName("lang" ) var lang : String? = null
+)
+@Serializable
+data class Room (
+    @SerialName("type"          ) var type          : String?        = null,
+    @SerialName("name"          ) var name          : String?        = null,
+    @SerialName("typeEstimated" ) var typeEstimated : TypeEstimated? = TypeEstimated(),
+    @SerialName("description"   ) var description   : Description?   = Description()
+)
+@Serializable
+data class Guests (
+    @SerialName("adults" ) var adults : Int? = null
+)
+@Serializable
+data class Taxes (
+    @SerialName("amount"   ) var amount   : String? = null,
+    @SerialName("currency" ) var currency : String? = null
+)
+@Serializable
+data class Average (
+    @SerialName("base" ) var base : String? = null
+)
+@Serializable
+data class Changes (
+    @SerialName("startDate" ) var startDate : String? = null,
+    @SerialName("endDate"   ) var endDate   : String? = null,
+    @SerialName("total"     ) var total     : String? = null
+)
+@Serializable
+data class Variations (
+    @SerialName("average" ) var average : Average?           = Average(),
+    @SerialName("changes" ) var changes : ArrayList<Changes> = arrayListOf()
+)
+@Serializable
+data class Price (
+    @SerialName("currency"   ) var currency   : String?          = null,
+    @SerialName("base"       ) var base       : String?          = null,
+    @SerialName("total"      ) var total      : String?          = null,
+    @SerialName("taxes"      ) var taxes      : ArrayList<Taxes> = arrayListOf(),
+    @SerialName("variations" ) var variations : Variations?      = Variations()
+)
+@Serializable
+data class Offers (
+    @SerialName("id"           ) var id           : String?      = null,
+    @SerialName("checkInDate"  ) var checkInDate  : String?      = null,
+    @SerialName("checkOutDate" ) var checkOutDate : String?      = null,
+    @SerialName("rateCode"     ) var rateCode     : String?      = null,
+    @SerialName("description"  ) var description  : Description? = Description(),
+    @SerialName("boardType"    ) var boardType    : String?      = null,
+    @SerialName("room"         ) var room         : Room?        = Room(),
+    @SerialName("guests"       ) var guests       : Guests?      = Guests(),
+    @SerialName("price"        ) var price        : Price?       = Price(),
+    @SerialName("self"         ) var self         : String?      = null
 )
