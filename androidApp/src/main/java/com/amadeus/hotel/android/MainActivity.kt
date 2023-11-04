@@ -2,6 +2,7 @@ package com.amadeus.hotel.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.getValue
@@ -29,10 +31,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.amadeus.hotel.Amadeus
 import com.amadeus.hotel.Hotel
 import kotlinx.coroutines.launch
 
+enum class HotelAppScreen(val title: String) {
+    Home(title = "Amadeus Hotel Search"),
+    Book(title = "Book"),
+    Summary(title = "Summary")
+}
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    MainView()
+                    HotelApp()
                 }
             }
         }
@@ -50,7 +62,67 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainView() {
+fun HotelAppBar(
+    currentScreen: HotelAppScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        title = { Text(currentScreen.title, color = Color.White) },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        ""
+                    )
+                }
+            }
+        }
+    )
+}
+@Composable
+fun HotelApp(
+     navController: NavHostController = rememberNavController()
+){
+    // Get current back stack entry
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    // Get the name of the current screen
+    val currentScreen = HotelAppScreen.valueOf(
+        backStackEntry?.destination?.route ?: HotelAppScreen.Home.name
+    )
+
+    Scaffold(
+        topBar = {
+            HotelAppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = HotelAppScreen.Home.name,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(route = HotelAppScreen.Home.name) {
+                HomeScreen(
+                    navController= navController
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(navController: NavHostController) {
     val coroutineScope = rememberCoroutineScope()
     var expanded by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("No hotels found") }
@@ -59,19 +131,7 @@ fun MainView() {
     var selectedCity by remember { mutableStateOf("") }
     var hotelList by remember { mutableStateOf(emptyList<Hotel>())}
 
-    Scaffold(
-        topBar = {
-            TopAppBar(title = {
-                Text(text = "Amadeus Hotel Search", color = Color.White)
-            },
-                colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-        )
-                )
-        },
-        content = { contentPadding ->
             Column(
-                modifier = Modifier.padding(contentPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -174,13 +234,13 @@ fun MainView() {
                             modifier = Modifier
                                 .padding(10.dp)
                                 .fillMaxWidth()
-                                .wrapContentHeight(),
+                                .wrapContentHeight()
+                                .clickable {
+
+                                },
                             shape = MaterialTheme.shapes.medium,
                             //elevation = 5.dp,
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
                                 Column(Modifier.padding(8.dp)) {
                                         Text(
                                             text = "${it.name}",
@@ -201,14 +261,13 @@ fun MainView() {
                                     )}
 
                                 }
-                            }
                         }
                     }
                 }
             }
             }
-        }
-    )
+
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -297,6 +356,6 @@ fun AmenitiesChipGroup(
 @Composable
 fun DefaultPreview() {
     MyApplicationTheme {
-        MainView()
+        HotelApp()
     }
 }
