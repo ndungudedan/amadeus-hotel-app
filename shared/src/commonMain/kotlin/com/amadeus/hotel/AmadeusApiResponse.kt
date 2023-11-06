@@ -64,11 +64,11 @@ data class Errors(
 )
 @Serializable
 data class HotelOffersResponse (
-    @SerialName("data" ) var data : ArrayList<OffersData> = arrayListOf()
+    @SerialName("data" ) var data : ArrayList<HotelOffers> = arrayListOf()
 )
 
 @Serializable
-data class OffersData (
+data class HotelOffers (
     @SerialName("type"      ) var type      : String?           = null,
     @SerialName("hotel"     ) var hotel     : Hotel?            = Hotel(),
     @SerialName("available" ) var available : Boolean?          = null,
@@ -141,4 +141,29 @@ data class Offers (
     @SerialName("guests"       ) var guests       : Guests?      = Guests(),
     @SerialName("price"        ) var price        : Price?       = Price(),
     @SerialName("self"         ) var self         : String?      = null
+)
+data class BookingResponse (
+    @SerialName("code"   ) var code   : Int?    = null,
+    @SerialName("title"  ) var title  : String? = null,
+    @SerialName("status" ) var status : Int?    = null,
+    @SerialName("warnings" ) var warnings : ArrayList<Warnings> = arrayListOf(),
+    @SerialName("data"     ) var data     : ArrayList<BookingData>     = arrayListOf(),
+    @SerialName("errors") var errors: ArrayList<Errors> = arrayListOf()
+)
+
+data class Warnings (
+    @SerialName("code"  ) var code  : Int?    = null,
+    @SerialName("title" ) var title : String? = null
+)
+
+data class AssociatedRecords (
+    @SerialName("reference"        ) var reference        : String? = null,
+    @SerialName("originSystemCode" ) var originSystemCode : String? = null
+)
+
+data class BookingData (
+    @SerialName("type"                   ) var type                   : String?                      = null,
+    @SerialName("id"                     ) var id                     : String?                      = null,
+    @SerialName("providerConfirmationId" ) var providerConfirmationId : String?                      = null,
+    @SerialName("associatedRecords"      ) var associatedRecords      : ArrayList<AssociatedRecords> = arrayListOf()
 )

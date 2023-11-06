@@ -99,24 +99,48 @@ class AmadeusApi {
 
     suspend fun searchHotelOffers(
         hotelIds: String,
-        checkInDate: String
-    ): Pair<List<Hotel>, String> {
+        checkInDate: String,
+        checkOutDate:String
+    ): Pair<List<HotelOffers>, String> {
         try {
             accessToken = getAccessToken()
             var url =
-                "https://test.api.amadeus.com/v3/shopping/hotel-offers?includeClosed=false&bestRateOnly=true&checkInDate=$checkInDate"
+                "https://test.api.amadeus.com/v3/shopping/hotel-offers?includeClosed=false&bestRateOnly=true&checkInDate=$checkInDate&checkOutDate=$checkOutDate"
             if (hotelIds.isNotEmpty()) {
                 url = "$url&hotelIds=$hotelIds"
             }
-            val response: HotelSearchResponse =
+            val response: HotelOffersResponse =
                 client.get(url) {
                     headers {
                         bearerAuth(accessToken)
                     }
                 }.body()
-            if (response.errors.isNotEmpty()) {
-                return Pair(emptyList(), response.errors.first().detail ?: "An error occurred")
+            return Pair(response.data, "")
+        } catch (e: ClientRequestException) {
+            return Pair(emptyList(), e.message ?: "An error occurred")
+        } catch (e: Exception) {
+            return Pair(emptyList(), e.message ?: "An error occurred")
+        }
+    }
+
+    suspend fun bookHotelOffer(
+        hotelIds: String,
+        checkInDate: String,
+        checkOutDate:String
+    ): Pair<List<HotelOffers>, String> {
+        try {
+            accessToken = getAccessToken()
+            var url =
+                "https://test.api.amadeus.com/v3/shopping/hotel-offers?includeClosed=false&bestRateOnly=true&checkInDate=$checkInDate&checkOutDate=$checkOutDate"
+            if (hotelIds.isNotEmpty()) {
+                url = "$url&hotelIds=$hotelIds"
             }
+            val response: HotelOffersResponse =
+                client.get(url) {
+                    headers {
+                        bearerAuth(accessToken)
+                    }
+                }.body()
             return Pair(response.data, "")
         } catch (e: ClientRequestException) {
             return Pair(emptyList(), e.message ?: "An error occurred")

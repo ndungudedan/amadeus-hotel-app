@@ -24,6 +24,9 @@ class Amadeus {
         return amadeusApi.searchHotelByCity(city = cityCodes[city]!!, amenities = amenities.joinToString(separator = ","), rating = rating.joinToString(separator = ","))
     }
 
+    suspend fun searchHotelOffers(hotelIds: String,checkInDate: String,checkOutDate:String): Pair<List<HotelOffers>, String>  {
+        return amadeusApi.searchHotelOffers(hotelIds=hotelIds,checkInDate=checkInDate,checkOutDate=checkOutDate)
+    }
     fun getCityCodes():Map<String,String>{
         return  cityCodes
     }
