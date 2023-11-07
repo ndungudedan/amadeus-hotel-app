@@ -11,119 +11,123 @@ struct ContentView: View {
     
     
     var body: some View {
-        VStack(alignment: .center) {
-            Text("Amadeus Hotel Search")
-                .font(.title)
-                .fontWeight(.bold)
-            
-            Text("Select Hotel Amenities")
-                .font(.body)
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(){
-                    ForEach(Amadeus().getHotelAmenities(), id: \.self) { amenity in
-                        ChipView(title: amenity, isSelected: selectedAmenities.contains(amenity),
-                                 onSelected: {
-                            if(selectedAmenities.contains(amenity)){
-                                selectedAmenities.remove(amenity)
-                            }else{
-                                selectedAmenities.insert(amenity)
-                            }
-                            if(!selectedCity.isEmpty){
-                                Task {
-                                    errorMessage="Loading"
-                                    if let res = try? await Amadeus().searchHotel(
-                                        city: selectedCity,
-                                        amenities: Array(selectedAmenities),
-                                        rating: Array(selectedHotelRatings)
-                                    ){
-                                        if(res.second == nil || res.second!.length == 0){
-                                            errorMessage=res.second! as String
+        NavigationView {
+            VStack(alignment: .center) {
+                Text("Amadeus Hotel Search")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                Text("Select Hotel Amenities")
+                    .font(.body)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(){
+                        ForEach(Amadeus().getHotelAmenities(), id: \.self) { amenity in
+                            ChipView(title: amenity, isSelected: selectedAmenities.contains(amenity),
+                                     onSelected: {
+                                if(selectedAmenities.contains(amenity)){
+                                    selectedAmenities.remove(amenity)
+                                }else{
+                                    selectedAmenities.insert(amenity)
+                                }
+                                if(!selectedCity.isEmpty){
+                                    Task {
+                                        errorMessage="Loading"
+                                        if let res = try? await Amadeus().searchHotel(
+                                            city: selectedCity,
+                                            amenities: Array(selectedAmenities),
+                                            rating: Array(selectedHotelRatings)
+                                        ){
+                                            if(res.second == nil || res.second!.length == 0){
+                                                errorMessage=res.second! as String
+                                            }
+                                            hotelList=res.first as! [Hotel]
+                                        }else{
+                                            errorMessage="An error occurred."
                                         }
-                                        hotelList=res.first as! [Hotel]
-                                    }else{
-                                        errorMessage="An error occurred."
                                     }
                                 }
+                            })
+                        }
+                    }
+                    .frame(maxHeight: 40)
+                }
+                Text("Select Hotel Rating:")
+                    .font(.body)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack{
+                        ForEach(Amadeus().getHotelRatings(), id: \.self) { rating in
+                            ChipView(title: rating.stringValue, isSelected: selectedHotelRatings.contains(rating),
+                                     onSelected: {
+                                if(selectedHotelRatings.contains(rating)){
+                                    selectedHotelRatings.remove(rating)
+                                }else{
+                                    selectedHotelRatings.insert(rating)
+                                }
+                                if(!selectedCity.isEmpty){
+                                    Task {
+                                        errorMessage="Loading"
+                                        if let res = try? await Amadeus().searchHotel(
+                                            city: selectedCity,
+                                            amenities: Array(selectedAmenities),
+                                            rating: Array(selectedHotelRatings)
+                                        ){
+                                            if(res.second == nil || res.second!.length == 0){
+                                                errorMessage=res.second! as String
+                                            }
+                                            hotelList=res.first as! [Hotel]
+                                        }else{
+                                            errorMessage="An error occurred."
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }                .frame(maxHeight: 40)
+                }
+                Text("Select a City")
+                    .font(.body)
+                
+                CityView(isPopoverPresented: $isPopoverPresented) { city in
+                    selectedCity=city
+                    Task {
+                        errorMessage="Loading"
+                        if let res = try? await Amadeus().searchHotel(
+                            city: city,
+                            amenities: Array(selectedAmenities),
+                            rating: Array(selectedHotelRatings)
+                        ){
+                            if(res.second == nil || res.second!.length == 0){
+                                errorMessage=res.second! as String
                             }
-                        })
+                            hotelList=res.first as! [Hotel]
+                        }else{
+                            errorMessage="An error occurred."
+                        }
                     }
                 }
-                .frame(maxHeight: 40)
-            }
-            Text("Select Hotel Rating:")
-                .font(.body)
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack{
-                    ForEach(Amadeus().getHotelRatings(), id: \.self) { rating in
-                        ChipView(title: rating.stringValue, isSelected: selectedHotelRatings.contains(rating),
-                                 onSelected: {
-                            if(selectedHotelRatings.contains(rating)){
-                                selectedHotelRatings.remove(rating)
-                            }else{
-                                selectedHotelRatings.insert(rating)
-                            }
-                            if(!selectedCity.isEmpty){
-                                Task {
-                                    errorMessage="Loading"
-                                    if let res = try? await Amadeus().searchHotel(
-                                        city: selectedCity,
-                                        amenities: Array(selectedAmenities),
-                                        rating: Array(selectedHotelRatings)
-                                    ){
-                                        if(res.second == nil || res.second!.length == 0){
-                                            errorMessage=res.second! as String
-                                        }
-                                        hotelList=res.first as! [Hotel]
-                                    }else{
-                                        errorMessage="An error occurred."
-                                    }
-                                }
-                            }
-                        })
-                    }
-                }                .frame(maxHeight: 40)
-            }
-            Text("Select a City")
-                .font(.body)
-            
-            CityView(isPopoverPresented: $isPopoverPresented) { city in
-                selectedCity=city
-                Task {
-                    errorMessage="Loading"
-                    if let res = try? await Amadeus().searchHotel(
-                        city: city,
-                        amenities: Array(selectedAmenities),
-                        rating: Array(selectedHotelRatings)
-                    ){
-                        if(res.second == nil || res.second!.length == 0){
-                            errorMessage=res.second! as String
-                        }
-                        hotelList=res.first as! [Hotel]
+                if(!isPopoverPresented){
+                    if(!errorMessage.isEmpty){
+                        Text(errorMessage)
+                            .font(.body)
+                        Spacer()
                     }else{
-                        errorMessage="An error occurred."
-                    }
-                }
-            }
-            if(!isPopoverPresented){
-                if(!errorMessage.isEmpty){
-                    Text(errorMessage)
-                        .font(.body)
-                    Spacer()
-                }else{
-                    ScrollView( showsIndicators: false) {
-                        LazyVStack{
-                            ForEach(hotelList, id: \.self) { hotel in
-                                HotelCard(hotel: hotel)
+                        ScrollView( showsIndicators: false) {
+                            LazyVStack{
+                                ForEach(hotelList, id: \.self) { hotel in
+                                    HotelCard(hotel: hotel)
+                                }
                             }
                         }
                     }
                 }
             }
+            .padding(.horizontal, 16)
         }
-        .padding(.horizontal, 16)
+        .navigationTitle("")
     }
 }
 
+// Describes a card view to display hotel details
 struct HotelCard: View {
     let hotel: Hotel
     
@@ -161,6 +165,7 @@ struct HotelCard: View {
     }
 }
 
+// Describes a custom chip used to select hotel filters
 struct ChipView: View {
     let title: String
     var isSelected: Bool
@@ -189,6 +194,7 @@ struct ChipView: View {
     }
 }
 
+// Describes a searchable drop down with a list of cities
 struct CityView: View {
     @State private var selectedCity = ""
     @State private var searchText = ""

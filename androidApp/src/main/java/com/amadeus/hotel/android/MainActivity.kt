@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,12 +38,16 @@ import androidx.navigation.compose.rememberNavController
 import com.amadeus.hotel.Amadeus
 import com.amadeus.hotel.Hotel
 import kotlinx.coroutines.launch
+import com.amadeus.hotel.android.MyApplicationTheme
 
+// Define your app screens
 enum class HotelAppScreen(val title: String) {
     Home(title = "Amadeus Hotel Search"),
     Book(title = "Book"),
     Summary(title = "Summary")
 }
+
+// App entry class
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +63,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// Define the app bar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HotelAppBar(
@@ -86,6 +90,8 @@ fun HotelAppBar(
         }
     )
 }
+
+// Define screen navigation
 @Composable
 fun HotelApp(
      navController: NavHostController = rememberNavController()
@@ -143,6 +149,7 @@ fun HomeScreen(navController: NavHostController) {
                     coroutineScope.launch {
                         if (selectedCity.isNotEmpty()) {
                             errorMessage="Loading"
+                            // Search Hotels from the Amadeus API if an amenity is selected
                            val res = Amadeus().searchHotel(
                                 selectedCity,
                                 selectedHotelAmenitiesState.value.toList(),
@@ -163,6 +170,7 @@ fun HomeScreen(navController: NavHostController) {
                     coroutineScope.launch {
                         if (selectedCity.isNotEmpty()) {
                             errorMessage="Loading"
+                            // Search Hotels from the Amadeus API if the selected ratings change
                             val res = Amadeus().searchHotel(
                                 selectedCity,
                                 selectedHotelAmenitiesState.value.toList(),
@@ -206,6 +214,7 @@ fun HomeScreen(navController: NavHostController) {
                                 selectedCity = it.key
                                 coroutineScope.launch {
                                     errorMessage="Loading"
+                                    // Search Hotels in the selected city from the Amadeus API
                                     val res = Amadeus().searchHotel(
                                         selectedCity,
                                         selectedHotelAmenitiesState.value.toList(),
@@ -266,8 +275,6 @@ fun HomeScreen(navController: NavHostController) {
                 }
             }
             }
-
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
