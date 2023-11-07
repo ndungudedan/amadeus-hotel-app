@@ -44,8 +44,8 @@ class AmadeusApi {
         // Use your credentials from the Amadeus developer dashboard
         val formData = Parameters.build {
             append("grant_type", "client_credentials")
-            append("client_id", "vwNbG2xHs9fyc7eUJrWQa3dugsCLxgA7")
-            append("client_secret", "5W4fs4NdMKpBhkhw")
+            append("client_id", "your-client-id")
+            append("client_secret", "your-client-secret")
         }
 
         return try {
