@@ -41,6 +41,7 @@ class AmadeusApi {
     }
 
     private suspend fun getAccessToken(): String {
+        // Use your credentials from the Amadeus developer dashboard
         val formData = Parameters.build {
             append("grant_type", "client_credentials")
             append("client_id", "vwNbG2xHs9fyc7eUJrWQa3dugsCLxgA7")
