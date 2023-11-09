@@ -288,17 +288,6 @@ fun HomeScreen(navController: NavHostController) {
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-@Composable
-fun DatePickerDemo(state: DatePickerState) {
-    DatePicker(
-        showModeToggle = false,
-        state = state,
-        title = null,
-        headline = null,
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RatingChipGroup(
