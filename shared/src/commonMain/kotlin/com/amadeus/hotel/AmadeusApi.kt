@@ -141,6 +141,9 @@ class AmadeusApi {
                         contentType(ContentType.Application.Json)
                         setBody(json)
                 }.body()
+            if(response.errors.isNotEmpty()){
+                return Pair(response.data,response.errors.first().title?:"")
+            }
                 return Pair(response.data,response.title?:"")
         } catch (e: ClientRequestException) {
             return Pair(emptyList(), e.message ?: "An error occurred")

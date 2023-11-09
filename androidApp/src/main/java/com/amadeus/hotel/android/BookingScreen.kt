@@ -71,8 +71,9 @@ fun BookingScreen(navController: NavHostController, hotelId: String) {
         }
         TextField(
             value = adultCount,
-            onValueChange = {},
-            readOnly = true,
+            onValueChange = {
+                            adultCount=it
+            },
             label = { Text(text = "No.of Guests") },
         )
         Button(onClick = {
@@ -115,12 +116,11 @@ fun BookingScreen(navController: NavHostController, hotelId: String) {
                         //elevation = 5.dp,
                     ) {
                         Column(Modifier.padding(8.dp)) {
-
                             Text(
-                                text = "Adults: ${it.guests?.adults.toString()}"
+                                text = "Price: ${it.price?.currency} ${it.price?.total} @${it.price?.variations?.average?.base ?: ""} ${it.price?.taxes?.first()?.pricingFrequency ?: ""}"
                             )
                             Text(
-                                text = "Price: ${it.price?.currency} ${it.price?.total} @${it.price?.variations?.average?.base ?: ""}"
+                                text = "Payment Type: ${it.policies?.paymentType}"
                             )
                             if (it.boardType != null) {
                                 Text(
@@ -133,7 +133,6 @@ fun BookingScreen(navController: NavHostController, hotelId: String) {
 
                             Button(onClick = {
                                 coroutineScope.launch {
-                                    errorMessage = "Booking"
                                     val res = Amadeus().bookHotelRooms(
                                         offerId = it.id!!,
                                         adultCount = adultCount.toInt()
@@ -146,7 +145,7 @@ fun BookingScreen(navController: NavHostController, hotelId: String) {
                                 }
 
                             }) {
-
+                                Text(text = "Book")
                             }
                         }
                     }
