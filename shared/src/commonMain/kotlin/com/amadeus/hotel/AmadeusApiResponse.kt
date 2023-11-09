@@ -104,7 +104,12 @@ data class Guests (
 @Serializable
 data class Taxes (
     @SerialName("amount"   ) var amount   : String? = null,
-    @SerialName("currency" ) var currency : String? = null
+    @SerialName("currency" ) var currency : String? = null,
+    @SerialName("code"   ) var code   : String? = null,
+    @SerialName("pricingFrequency" ) var pricingFrequency : String? = null,
+    @SerialName("pricingMode" ) var pricingMode : String? = null,
+    @SerialName("percentage"   ) var percentage   : String? = null,
+    @SerialName("included" ) var included : Boolean? = null
 )
 @Serializable
 data class Average (
@@ -164,6 +169,7 @@ data class Offers (
     @SerialName("policies"            ) var policies            : Policies?            = Policies(),
     @SerialName("self"         ) var self         : String?      = null
 )
+@Serializable
 data class BookingResponse (
     @SerialName("code"   ) var code   : Int?    = null,
     @SerialName("title"  ) var title  : String? = null,
@@ -172,17 +178,17 @@ data class BookingResponse (
     @SerialName("data"     ) var data     : ArrayList<BookingData>     = arrayListOf(),
     @SerialName("errors") var errors: ArrayList<Errors> = arrayListOf()
 )
-
+@Serializable
 data class Warnings (
     @SerialName("code"  ) var code  : Int?    = null,
     @SerialName("title" ) var title : String? = null
 )
-
+@Serializable
 data class AssociatedRecords (
     @SerialName("reference"        ) var reference        : String? = null,
     @SerialName("originSystemCode" ) var originSystemCode : String? = null
 )
-
+@Serializable
 data class BookingData (
     @SerialName("type"                   ) var type                   : String?                      = null,
     @SerialName("id"                     ) var id                     : String?                      = null,
