@@ -92,7 +92,7 @@ class AmadeusApi {
             }
             return Pair(response.data, "")
         } catch (e: ClientRequestException) {
-            return Pair(emptyList(), e.message ?: "An error occurred")
+            return Pair(emptyList(), e.message)
         } catch (e: Exception) {
             return Pair(emptyList(), e.message ?: "An error occurred")
         }
@@ -119,7 +119,7 @@ class AmadeusApi {
                 }.body()
             return Pair(response.data, "")
         } catch (e: ClientRequestException) {
-            return Pair(emptyList(), e.message ?: "An error occurred")
+            return Pair(emptyList(), e.message)
         } catch (e: Exception) {
             return Pair(emptyList(), e.message ?: "An error occurred")
         }
@@ -146,7 +146,7 @@ class AmadeusApi {
             }
                 return Pair(response.data,response.title?:"")
         } catch (e: ClientRequestException) {
-            return Pair(emptyList(), e.message ?: "An error occurred")
+            return Pair(emptyList(), e.message)
         } catch (e: Exception) {
             return Pair(emptyList(), e.message ?: "An error occurred")
         }

@@ -138,7 +138,6 @@ fun BookingScreen(navController: NavHostController, hotelId: String) {
                                 coroutineScope.launch {
                                     val res = Amadeus().bookHotelRooms(
                                         offerId = it.id!!,
-                                        adultCount = adultCount.toInt()
                                     )
                                     bookingResponse = if (res.first.isNotEmpty()) {
                                         " Booking Successful. ConfirmationID: ${res.first.first().providerConfirmationId}"
@@ -177,15 +176,7 @@ fun BookingScreen(navController: NavHostController, hotelId: String) {
                     Text("Confirm")
                 }
             },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        bookingResponse=""
-                    }
-                ) {
-                    Text("Dismiss")
-                }
-            }
+
         )
     }
 }

@@ -34,20 +34,19 @@ class Amadeus {
         return amadeusApi.searchHotelOffers(hotelIds=hotelIds,checkInDate=checkInDate,checkOutDate=checkOutDate,adults=adults)
     }
 
-    suspend fun bookHotelRooms(offerId:String, adultCount:Int): Pair<List<BookingData>, String>{
-        fun guest(random:Int): JsonObject {
-            return  buildJsonObject {
+    suspend fun bookHotelRooms(offerId:String): Pair<List<BookingData>, String>{
+         val guest= buildJsonObject {
                 putJsonObject("name"){
                     put("title", "Mr")
                     put("firstName", "Bob")
                     put("lastName", "Smith")
                 }
                 putJsonObject("contact"){
-                    put("phone", "+3367927$random")
-                    put("email", "$random.smith@email.com")
+                    put("phone", "+33679271474")
+                    put("email", "bob.smith@email.com")
                 }
             }
-        }
+
         val payment= buildJsonObject {
                 put("method", "creditCard")
             putJsonObject("card") {
@@ -60,7 +59,7 @@ class Amadeus {
             putJsonObject("data") {
                 put("offerId", offerId)
                 putJsonArray("guests") {
-                    for (i in 1..adultCount)add(guest(i))
+                    add(guest)
                 }
                 putJsonArray("payments") {
                     add(payment)
