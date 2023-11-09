@@ -41,8 +41,8 @@ class Amadeus {
                 put("lastName", "Smith")
             }
             putJsonObject("contact"){
-                put("phone", "+33679278416")
-                put("email", "bob.smith@email.com")
+                put("phone", "+3367927${(10000..99999).random()}")
+                put("email", "${(0..10).random()}.smith@email.com")
             }
         }
         val payment= buildJsonObject {
