@@ -22,6 +22,7 @@ import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 
 class AmadeusApi {
     private var accessToken = ""
@@ -100,12 +101,13 @@ class AmadeusApi {
     suspend fun searchHotelOffers(
         hotelIds: String,
         checkInDate: String,
-        checkOutDate:String
+        checkOutDate:String,
+        adults:String
     ): Pair<List<HotelOffers>, String> {
         try {
             accessToken = getAccessToken()
             var url =
-                "https://test.api.amadeus.com/v3/shopping/hotel-offers?includeClosed=false&bestRateOnly=true&checkInDate=$checkInDate&checkOutDate=$checkOutDate"
+                "https://test.api.amadeus.com/v3/shopping/hotel-offers?adults=$adults&includeClosed=false&bestRateOnly=true&checkInDate=$checkInDate&checkOutDate=$checkOutDate"
             if (hotelIds.isNotEmpty()) {
                 url = "$url&hotelIds=$hotelIds"
             }
@@ -124,24 +126,22 @@ class AmadeusApi {
     }
 
     suspend fun bookHotelOffer(
-        hotelIds: String,
-        checkInDate: String,
-        checkOutDate:String
-    ): Pair<List<HotelOffers>, String> {
+        json: JsonObject,
+    ): Pair<List<BookingData>, String> {
         try {
             accessToken = getAccessToken()
-            var url =
-                "https://test.api.amadeus.com/v3/shopping/hotel-offers?includeClosed=false&bestRateOnly=true&checkInDate=$checkInDate&checkOutDate=$checkOutDate"
-            if (hotelIds.isNotEmpty()) {
-                url = "$url&hotelIds=$hotelIds"
-            }
-            val response: HotelOffersResponse =
-                client.get(url) {
+            val url =
+                "https://test.api.amadeus.com/v1/booking/hotel-bookings"
+            val response: BookingResponse =
+                client
+                    .post(url) {
                     headers {
                         bearerAuth(accessToken)
                     }
+                        contentType(ContentType.Application.Json)
+                        setBody(json)
                 }.body()
-            return Pair(response.data, "")
+                return Pair(response.data,response.title?:"")
         } catch (e: ClientRequestException) {
             return Pair(emptyList(), e.message ?: "An error occurred")
         } catch (e: Exception) {

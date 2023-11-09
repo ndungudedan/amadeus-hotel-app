@@ -130,6 +130,27 @@ data class Price (
     @SerialName("variations" ) var variations : Variations?      = Variations()
 )
 @Serializable
+data class Cancellations (
+    @SerialName("type"        ) var type        : String?      = null,
+    @SerialName("description" ) var description : Description? = Description()
+)
+@Serializable
+data class AcceptedPayments (
+    @SerialName("creditCards" ) var creditCards : ArrayList<String> = arrayListOf(),
+    @SerialName("methods"     ) var methods     : ArrayList<String> = arrayListOf()
+)
+@Serializable
+data class Deposit (
+    @SerialName("acceptedPayments" ) var acceptedPayments : AcceptedPayments? = AcceptedPayments()
+)
+
+@Serializable
+data class Policies (
+    @SerialName("cancellations" ) var cancellations : ArrayList<Cancellations> = arrayListOf(),
+    @SerialName("deposit"       ) var deposit       : Deposit?                 = Deposit(),
+    @SerialName("paymentType"   ) var paymentType   : String?                  = null
+)
+@Serializable
 data class Offers (
     @SerialName("id"           ) var id           : String?      = null,
     @SerialName("checkInDate"  ) var checkInDate  : String?      = null,
@@ -140,6 +161,7 @@ data class Offers (
     @SerialName("room"         ) var room         : Room?        = Room(),
     @SerialName("guests"       ) var guests       : Guests?      = Guests(),
     @SerialName("price"        ) var price        : Price?       = Price(),
+    @SerialName("policies"            ) var policies            : Policies?            = Policies(),
     @SerialName("self"         ) var self         : String?      = null
 )
 data class BookingResponse (

@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,10 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
@@ -28,19 +24,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -53,11 +44,11 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.material3.AlertDialog as AlertDialog
 
 enum class HotelAppScreen(val title: String) {
     Home(title = "Amadeus Hotel Search"),
-    Book(title = "Book"),
-    Summary(title = "Summary")
+    Book(title = "Book Hotel Room"),
 }
 
 class MainActivity : ComponentActivity() {
@@ -136,7 +127,7 @@ fun HotelApp(
                 val hotelId = backStackEntry?.arguments?.getString("hotelId")
 
                 hotelId?.let { it1 ->
-                    BookScreen(
+                    BookingScreen(
                         navController = navController,
                         hotelId = it1
                     )
@@ -242,7 +233,6 @@ fun HomeScreen(navController: NavHostController) {
                             }
                             hotelList = res.first
                         }
-
                     })
                 }
             }
@@ -296,105 +286,6 @@ fun HomeScreen(navController: NavHostController) {
     }
 
 
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BookScreen(navController: NavHostController, hotelId: String) {
-    val coroutineScope = rememberCoroutineScope()
-    var errorMessage by remember { mutableStateOf("No Hotel Rooms") }
-    var hotelOffers by remember { mutableStateOf<HotelOffers?>(null) }
-    val checkInDateState = rememberDatePickerState(
-        initialDisplayMode = DisplayMode.Input,
-        initialSelectedDateMillis = System.currentTimeMillis()
-    )
-    val checkOutDateState = rememberDatePickerState(
-        initialDisplayMode = DisplayMode.Input,
-        initialSelectedDateMillis = System.currentTimeMillis()
-    )
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
-
-        ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = "Check In")
-                DatePickerDemo(state = checkInDateState)
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = "Check Out")
-                DatePickerDemo(state = checkOutDateState)
-            }
-        }
-        Button(onClick = {
-            coroutineScope.launch {
-                if (checkInDateState.selectedDateMillis != null && checkOutDateState.selectedDateMillis != null) {
-                    errorMessage = "Loading"
-                    val res = Amadeus().searchHotelOffers(
-                        hotelIds = hotelId,
-                        checkInDate = dateFormat.format(Date(checkInDateState.selectedDateMillis!!)),
-                        checkOutDate = dateFormat.format(Date(checkOutDateState.selectedDateMillis!!)),
-                    )
-                    if (res.second.isNotEmpty()) {
-                        errorMessage = res.second
-                    }
-                    hotelOffers = res.first.firstOrNull()
-                    errorMessage = "No Hotel Rooms Found"
-                }
-            }
-        }) {
-            Text(text = "Search")
-        }
-        if (hotelOffers == null) {
-            Text(text = errorMessage, modifier = Modifier.padding(8.dp))
-        } else {
-            Text(
-                text = "${hotelOffers?.hotel?.name}",
-            )
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-                items(hotelOffers!!.offers) {
-                    Card(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .clickable {
-                                //navController.navigate(HotelAppScreen.Book.name)
-                            },
-                        shape = MaterialTheme.shapes.medium,
-                        //elevation = 5.dp,
-                    ) {
-                        Column(Modifier.padding(8.dp)) {
-
-                            Text(
-                                text = "Adults: ${it.guests?.adults.toString()}"
-                            )
-                            Text(
-                                text = "Price: ${it.price?.currency} ${it.price?.total} @${it.price?.variations?.average?.base ?: ""}"
-                            )
-                            if (it.boardType != null) {
-                                Text(
-                                    text = "BoardType: ${it.boardType}"
-                                )
-                            }
-                            Text(
-                                text = "\n${it.room?.description?.text}",
-                            )
-
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
