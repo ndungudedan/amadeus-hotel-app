@@ -43,8 +43,7 @@ import com.amadeus.hotel.android.MyApplicationTheme
 // Define your app screens
 enum class HotelAppScreen(val title: String) {
     Home(title = "Amadeus Hotel Search"),
-    Book(title = "Book"),
-    Summary(title = "Summary")
+    Book(title = "Book")
 }
 
 // App entry class
