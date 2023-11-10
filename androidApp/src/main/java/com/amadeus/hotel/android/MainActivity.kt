@@ -42,8 +42,7 @@ import kotlinx.coroutines.launch
 
 enum class HotelAppScreen(val title: String) {
     Home(title = "Amadeus Hotel Search"),
-    Book(title = "Book"),
-    Summary(title = "Summary")
+    Book(title = "Book")
 }
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
