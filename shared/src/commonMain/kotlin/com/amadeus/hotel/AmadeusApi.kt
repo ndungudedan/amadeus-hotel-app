@@ -106,11 +106,8 @@ class AmadeusApi {
     ): Pair<List<HotelOffers>, String> {
         try {
             accessToken = getAccessToken()
-            var url =
-                "https://test.api.amadeus.com/v3/shopping/hotel-offers?adults=$adults&includeClosed=false&bestRateOnly=true&checkInDate=$checkInDate&checkOutDate=$checkOutDate"
-            if (hotelIds.isNotEmpty()) {
-                url = "$url&hotelIds=$hotelIds"
-            }
+            val url =
+                "https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=$hotelIds&adults=$adults&includeClosed=false&bestRateOnly=true&checkInDate=$checkInDate&checkOutDate=$checkOutDate"
             val response: HotelOffersResponse =
                 client.get(url) {
                     headers {

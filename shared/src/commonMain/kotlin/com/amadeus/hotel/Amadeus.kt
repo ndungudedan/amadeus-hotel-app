@@ -35,6 +35,7 @@ class Amadeus {
     }
 
     suspend fun bookHotelRooms(offerId:String): Pair<List<BookingData>, String>{
+        // Provide guest details from the client
          val guest= buildJsonObject {
                 putJsonObject("name"){
                     put("title", "Mr")
@@ -46,7 +47,7 @@ class Amadeus {
                     put("email", "bob.smith@email.com")
                 }
             }
-
+        // Provide payment information from the client
         val payment= buildJsonObject {
                 put("method", "creditCard")
             putJsonObject("card") {

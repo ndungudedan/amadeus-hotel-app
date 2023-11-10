@@ -125,7 +125,7 @@ struct ContentView: View {
             }
             .padding(.horizontal, 16)
         }
-        .navigationTitle("Daily Scrums")
+        .navigationTitle("")
     }
 }
 

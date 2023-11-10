@@ -39,7 +39,8 @@ struct BookView:View{
                     if let res = try? await Amadeus().searchHotelOffers(
                         hotelIds: hotelId,
                         checkInDate: dateFormatter.string(from:checkInDate),
-                        checkOutDate: dateFormatter.string(from: checkOutDate), adults: adultCount
+                        checkOutDate: dateFormatter.string(from: checkOutDate),
+                        adults: adultCount
                     ){
                         if(res.second == nil || res.second!.length == 0){
                             errorMessage=res.second! as String

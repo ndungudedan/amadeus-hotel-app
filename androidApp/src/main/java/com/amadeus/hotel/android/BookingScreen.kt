@@ -181,7 +181,7 @@ fun BookingScreen(navController: NavHostController, hotelId: String) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerDemo(state: DatePickerState) {
     DatePicker(
