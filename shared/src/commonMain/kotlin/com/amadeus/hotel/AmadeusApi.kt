@@ -4,7 +4,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -17,11 +16,11 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 
 class AmadeusApi {
     private var accessToken = ""
@@ -41,7 +40,6 @@ class AmadeusApi {
     }
 
     private suspend fun getAccessToken(): String {
-        // Use your credentials from the Amadeus developer dashboard
         val formData = Parameters.build {
             append("grant_type", "client_credentials")
             append("client_id", "vwNbG2xHs9fyc7eUJrWQa3dugsCLxgA7")
@@ -92,9 +90,61 @@ class AmadeusApi {
             }
             return Pair(response.data, "")
         } catch (e: ClientRequestException) {
-            return Pair(emptyList(), e.message ?: "An error occurred")
+            return Pair(emptyList(), e.message)
         } catch (e: Exception) {
             return Pair(emptyList(), e.message ?: "An error occurred")
         }
     }
+
+    suspend fun searchHotelOffers(
+        hotelIds: String,
+        checkInDate: String,
+        checkOutDate:String,
+        adults:String
+    ): Pair<List<HotelOffers>, String> {
+        try {
+            accessToken = getAccessToken()
+            val url =
+                "https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=$hotelIds&adults=$adults&includeClosed=false&bestRateOnly=true&checkInDate=$checkInDate&checkOutDate=$checkOutDate"
+            val response: HotelOffersResponse =
+                client.get(url) {
+                    headers {
+                        bearerAuth(accessToken)
+                    }
+                }.body()
+            return Pair(response.data, "")
+        } catch (e: ClientRequestException) {
+            return Pair(emptyList(), e.message)
+        } catch (e: Exception) {
+            return Pair(emptyList(), e.message ?: "An error occurred")
+        }
+    }
+
+    suspend fun bookHotelOffer(
+        json: JsonObject,
+    ): Pair<List<BookingData>, String> {
+        try {
+            accessToken = getAccessToken()
+            val url =
+                "https://test.api.amadeus.com/v1/booking/hotel-bookings"
+            val response: BookingResponse =
+                client
+                    .post(url) {
+                    headers {
+                        bearerAuth(accessToken)
+                    }
+                        contentType(ContentType.Application.Json)
+                        setBody(json)
+                }.body()
+            if(response.errors.isNotEmpty()){
+                return Pair(response.data,response.errors.first().title?:"")
+            }
+                return Pair(response.data,response.title?:"")
+        } catch (e: ClientRequestException) {
+            return Pair(emptyList(), e.message)
+        } catch (e: Exception) {
+            return Pair(emptyList(), e.message ?: "An error occurred")
+        }
+    }
+
 }
