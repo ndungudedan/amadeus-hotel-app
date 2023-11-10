@@ -165,7 +165,7 @@ struct HotelCard: View {
     }
 }
 
-// Describes a custom chip used to select hotel filters
+// Describe a custom chip used to select hotel filters
 struct ChipView: View {
     let title: String
     var isSelected: Bool
