@@ -194,7 +194,7 @@ struct ChipView: View {
     }
 }
 
-// Describes a searchable drop down with a list of cities
+// Describe a searchable drop-down menu with a list of cities
 struct CityView: View {
     @State private var selectedCity = ""
     @State private var searchText = ""
