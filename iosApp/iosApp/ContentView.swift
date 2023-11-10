@@ -127,7 +127,7 @@ struct ContentView: View {
     }
 }
 
-// Describes a card view to display hotel details
+// Describe a card view to display hotel details
 struct HotelCard: View {
     let hotel: Hotel
     
