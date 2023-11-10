@@ -114,9 +114,7 @@ struct ContentView: View {
                         ScrollView( showsIndicators: false) {
                             LazyVStack{
                                 ForEach(hotelList, id: \.self) { hotel in
-                                    NavigationLink(destination: BookView(hotelId:hotel.hotelId ?? "")) {
-                                        HotelCard(hotel: hotel)
-                                    }
+                                    HotelCard(hotel: hotel)
                                 }
                             }
                         }
@@ -129,6 +127,7 @@ struct ContentView: View {
     }
 }
 
+// Describe a card view to display hotel details
 struct HotelCard: View {
     let hotel: Hotel
     
@@ -166,6 +165,7 @@ struct HotelCard: View {
     }
 }
 
+// Describe a custom chip used to select hotel filters
 struct ChipView: View {
     let title: String
     var isSelected: Bool
@@ -194,6 +194,7 @@ struct ChipView: View {
     }
 }
 
+// Describe a searchable drop-down menu with a list of cities
 struct CityView: View {
     @State private var selectedCity = ""
     @State private var searchText = ""
