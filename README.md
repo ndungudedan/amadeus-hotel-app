@@ -32,7 +32,7 @@
 
 Android app             |  iOS app
 :-------------------------:|:-------------------------:
-<img src="https://i.imgur.com/gmCUPkn.gif" width="180" height="350"/>  |  <img src="https://i.imgur.com/F3LJ2zf.gif" width="180" height="350"/>
+<img src="https://i.imgur.com/8fDtcY0.gif" width="180" height="350"/>  |  <img src="https://i.imgur.com/F3LJ2zf.gif" width="180" height="350"/>
 
 This tutorial teaches you how to create a mobile hotel booking app in Kotlin Multi-Platform. You will use the Amadeus Hotel Search APIs to search for available hotels within major worldwide cities and complete the booking flow using the Amadeus Hotel Booking API.
 This tutorial will be in two parts:
@@ -58,12 +58,13 @@ To get started with this tutorial, you will need to do the following:
    ```sh
    git clone https://github.com/ndungudedan/amadeus-hotel-app
    ```
-  If you are on part 1 of the tutorial, please checkout the `part-1` branch
-  ```sh
+   
+   If you are on part 1 of the tutorial, please checkout the `part-1` branch:
+   ```sh
    git checkout part-1
    ```
-  However, if you would like to see the complete code for this 2-part series, please checkout the `main` branch:
-  ```sh
+   However, if you would like to see the complete code for this 2-part series, please checkout the `main` branch:
+   ```sh
    git checkout main
    ```
 2. Create an [Amadeus developer account](https://developers.amadeus.com/register).
