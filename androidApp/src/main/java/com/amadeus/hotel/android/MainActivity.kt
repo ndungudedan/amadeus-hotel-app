@@ -66,13 +66,13 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HotelAppBar(
-    currentScreen: HotelAppScreen,
+    title: String,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
-        title = { Text(currentScreen.title, color = Color.White) },
+        title = { Text(title, color = Color.White) },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
@@ -99,13 +99,13 @@ fun HotelApp(
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
     val currentScreen = HotelAppScreen.valueOf(
-        backStackEntry?.destination?.route ?: HotelAppScreen.Home.name
+        backStackEntry?.destination?.route?.split("/")?.get(0) ?: HotelAppScreen.Home.name
     )
 
     Scaffold(
         topBar = {
             HotelAppBar(
-                currentScreen = currentScreen,
+                title = currentScreen.title,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() }
             )
