@@ -114,7 +114,9 @@ struct ContentView: View {
                         ScrollView( showsIndicators: false) {
                             LazyVStack{
                                 ForEach(hotelList, id: \.self) { hotel in
-                                    HotelCard(hotel: hotel)
+                                    NavigationLink(destination: BookView(hotelId:hotel.hotelId ?? "")) {
+                                        HotelCard(hotel: hotel)
+                                    }
                                 }
                             }
                         }
